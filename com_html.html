@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나뭇잎 잎맥 분류 시스템</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flexboxgrid@6.3.1/dist/flexboxgrid.min.css" rel="stylesheet">
+    <style>
+        /* Main styling */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive table */
+        .data-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container">
+        <!-- Header Section -->
+        <header class="text-center py-8">
+            <h1 class="text-3xl font-bold text-gray-800">나뭇잎 잎맥 분류 시스템</h1>
+            <p class="text-gray-600 mt-2">나뭇잎의 크기를 입력하여 잎맥 유형을 분류합니다</p>
+        </header>
+
+        <!-- Tutorial Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">사용 방법</h2>
+            <ol class="list-decimal ml-6">
+                <li class="mb-2">나뭇잎의 세로 길이(높이)를 입력합니다.</li>
+                <li class="mb-2">나뭇잎의 가로 길이(넓이)를 입력합니다.</li>
+                <li class="mb-2">'분류하기' 버튼을 클릭하여 결과를 확인합니다.</li>
+            </ol>
+        </div>
+
+        <!-- Input Form -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <form id="leafForm" class="space-y-4">
+                <div>
+                    <label for="length" class="block text-sm font-medium text-gray-700">세로 길이 (cm)</label>
+                    <input type="number" id="length" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label for="width" class="block text-sm font-medium text-gray-700">가로 길이 (cm)</label>
+                    <input type="number" id="width" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors">
+                    분류하기
+                </button>
+            </form>
+        </div>
+
+        <!-- Result Section -->
+        <div id="result" class="hidden bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">분류 결과</h2>
+            <p id="resultText" class="text-lg text-center"></p>
+        </div>
+
+        <!-- Sample Data Table -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold mb-4">샘플 데이터</h2>
+            <div class="data-table">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">이름</th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">세로 길이</th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">가로 길이</th>
+                            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase">종류</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="sampleData">
+                        <!-- Sample data will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const sampleData = [
+            { name: "단풍나무", length: 18, width: 4, kind: "net" },
+            { name: "대나무", length: 15, width: 2, kind: "parallel" },
+            { name: "은행나무", length: 12, width: 8, kind: "net" },
+            { name: "벼", length: 20, width: 1.5, kind: "parallel" }
+        ];
+
+        // Populate sample data table
+        document.addEventListener('DOMContentLoaded', () => {
+            const tableBody = document.getElementById('sampleData');
+            sampleData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${item.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${item.length}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${item.width}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${item.kind}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        });
+
+        // Form submission handler
+        document.getElementById('leafForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const length = parseFloat(document.getElementById('length').value);
+            const width = parseFloat(document.getElementById('width').value);
+            
+            // Simple classification logic
+            const ratio = length / width;
+            const result = ratio > 5 ? 'parallel' : 'net';
+            
+            // Show result
+            const resultDiv = document.getElementById('result');
+            const resultText = document.getElementById('resultText');
+            resultDiv.classList.remove('hidden');
+            resultText.textContent = `분류 결과: ${result === 'parallel' ? '평행맥' : '망상맥'}`;
+            
+            // Add fade-in animation
+            resultDiv.classList.add('fade-in');
+        });
+    </script>
+</body>
+</html>
