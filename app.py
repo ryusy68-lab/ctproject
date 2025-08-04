@@ -47,7 +47,7 @@ with col1:
         melted = df.melt(id_vars='name', value_vars=['kor', 'math', 'eng', 'info'],
                          var_name='subject', value_name='score')
         #fig = px.bar(melted, x='name', y='score', color='subject', barmode='group',
-                     title="학생별 과목 점수")
+                    # title="학생별 과목 점수")
         #st.plotly_chart(fig)
     with st.expander('content3_images'):
          st.subheader('content3_images')
