@@ -55,7 +55,7 @@ with col1:
          st.write('<h1>This is new title</h1>', unsafe_allow_html=True)
          st.markdown(html,unsafe_allow_html=True)
     with st.expander('content3_htmlContent..'):
-         st.subhrader('content3_htmlContent..')
+         st.subheader('content3_htmlContent..')
          import streamlit.components.v1 as htmlviewer
          htmlviewer.html(filehtml,height=800)
 with col2:
